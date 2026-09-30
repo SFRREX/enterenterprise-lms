@@ -9,8 +9,21 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
 
+interface Assignment {
+  id: string
+  title: string
+  course: string
+  dueDate: string
+  points: number
+  status: string
+  grade: number | null
+  allowedTypes: string
+  description: string
+  feedback?: string
+}
+
 export default function StudentAssignmentsPage() {
-  const [assignments, setAssignments] = useState([
+  const [assignments, setAssignments] = useState<Assignment[]>([
     {
       id: "asg-1",
       title: "Assignment 3: Implement Zero-Trust RLS Policies",
@@ -28,13 +41,17 @@ export default function StudentAssignmentsPage() {
       course: "Cloud Infrastructure, Distributed Systems & Edge R2",
       dueDate: "Submitted 2 days ago",
       points: 100,
-      grade: 95,
+      pointsTotal: 100,
+      pointsEarned: 95,
       status: "graded",
+      grade: 95,
+      allowedTypes: "ZIP, TypeScript file",
+      description: "Build an edge handler creating 15-minute signed PUT URLs with content-length restrictions.",
       feedback: "Clean architecture, presigned URLs appropriately time-bounded to 15 minutes."
-    }
+    } as Assignment
   ])
 
-  const [activeUpload, setActiveUpload] = useState<any | null>(null)
+  const [activeUpload, setActiveUpload] = useState<Assignment | null>(null)
   const [selectedFileName, setSelectedFileName] = useState<string>("rls_submission_v1.zip")
   const [notification, setNotification] = useState<string | null>(null)
 

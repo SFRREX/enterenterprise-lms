@@ -9,8 +9,18 @@ import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
 import { Plus, BookOpen, Layers, Edit, Trash2, CheckCircle2 } from "lucide-react"
 
+interface Course {
+  id: string
+  title: string
+  batch: string
+  instructor: string
+  chaptersCount: number
+  lessonsCount: number
+  isPublished: boolean
+}
+
 export default function AdminCoursesPage() {
-  const [courses, setCourses] = useState([
+  const [courses, setCourses] = useState<Course[]>([
     {
       id: "crs-1",
       title: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
@@ -41,7 +51,7 @@ export default function AdminCoursesPage() {
   ])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingCourse, setEditingCourse] = useState<any | null>(null)
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null)
   const [notification, setNotification] = useState<string | null>(null)
 
   const [newCourse, setNewCourse] = useState({
@@ -215,9 +225,11 @@ export default function AdminCoursesPage() {
               variant={editingCourse?.isPublished ? "destructive" : "primary"}
               size="sm"
               onClick={() => {
-                setCourses(courses.map(c => c.id === editingCourse.id ? { ...c, isPublished: !c.isPublished } : c))
+                if (!editingCourse) return
+                const courseToUpdate = editingCourse
+                setCourses(courses.map(c => c.id === courseToUpdate.id ? { ...c, isPublished: !c.isPublished } : c))
                 setEditingCourse(null)
-                setNotification(`Toggled publication state for ${editingCourse.title}!`)
+                setNotification(`Toggled publication state for ${courseToUpdate.title}!`)
                 setTimeout(() => setNotification(null), 4000)
               }}
             >

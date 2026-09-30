@@ -9,8 +9,21 @@ import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
 import { CheckSquare, Download, CheckCircle2 } from "lucide-react"
 
+interface Submission {
+  id: string
+  student: string
+  assignment: string
+  course: string
+  submittedAt: string
+  file: string
+  fileSize: string
+  status: string
+  grade: string | null
+  feedback: string
+}
+
 export default function TeacherAssignmentsPage() {
-  const [submissions, setSubmissions] = useState([
+  const [submissions, setSubmissions] = useState<Submission[]>([
     {
       id: "sub-1",
       student: "Alex Rivera",
@@ -49,7 +62,7 @@ export default function TeacherAssignmentsPage() {
     }
   ])
 
-  const [activeSubmission, setActiveSubmission] = useState<any | null>(null)
+  const [activeSubmission, setActiveSubmission] = useState<Submission | null>(null)
   const [scoreInput, setScoreInput] = useState<string>("95")
   const [feedbackInput, setFeedbackInput] = useState<string>("Good implementation of row-level security constraints.")
   const [notification, setNotification] = useState<string | null>(null)

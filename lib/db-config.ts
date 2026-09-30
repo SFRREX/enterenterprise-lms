@@ -10,7 +10,7 @@ export interface DatabaseConfig {
 }
 
 export const dbConfig: DatabaseConfig = {
-  provider: (process.env.DATABASE_PROVIDER as any) || 'supabase',
+  provider: (process.env.DATABASE_PROVIDER as DatabaseConfig['provider']) || 'supabase',
   connectionString: process.env.DATABASE_URL,
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
