@@ -40,52 +40,51 @@ function LoginForm() {
     try {
       const supabase = createClient()
 
-      // 1. Authenticate with Supabase Auth
+      // 1. Authenticate strictly against Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password
       })
 
-      if (authError) {
-        // If not found in Supabase Auth yet, support instant initial admin sign-in or fallback
-        console.warn("Supabase Auth error:", authError.message)
+      if (authError || !authData?.user) {
+        // STRICT ZERO-TRUST: Any invalid credential or wrong password immediately halts with an error
+        setError(authError?.message || "Invalid email or password. Please verify your credentials.")
+        setIsLoading(false)
+        return
       }
 
-      // 2. Fetch or resolve profile role
-      let role = selectedRole
-      let userName = email.split('@')[0].replace(/[._-]/g, ' ')
-      let formattedName = userName.charAt(0).toUpperCase() + userName.slice(1)
+      // 2. Fetch authenticated profile role
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authData.user.id)
+        .single()
 
-      if (authData?.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authData.user.id)
-          .single()
-
-        if (profile?.role) {
-          role = profile.role as "student" | "teacher" | "admin"
-        }
-        if (profile?.full_name) {
-          formattedName = profile.full_name
-        }
+      if (profileError || !profile) {
+        setError("Account authenticated, but no active profile was found. Please contact administration.")
+        setIsLoading(false)
+        return
       }
 
+      const role = profile.role as "student" | "teacher" | "admin"
+      const formattedName = profile.full_name || email.split('@')[0]
       const initials = formattedName.slice(0, 2).toUpperCase()
 
+      // 3. Set verified session cookie
       const session = {
-        id: authData?.user?.id || `usr-${Date.now()}`,
-        name: formattedName || "User",
-        email: email.trim(),
+        id: authData.user.id,
+        name: formattedName,
+        email: profile.email || email.trim(),
         role: role,
         batch: role === "student" ? "Cohort 2026-Alpha" : undefined,
         batchCode: role === "student" ? "BATCH-2026" : undefined,
-        initials: initials || "US"
+        initials: initials
       }
 
       const serialized = encodeURIComponent(JSON.stringify(session))
       document.cookie = `${AUTH_COOKIE_NAME}=${serialized}; path=/; max-age=604800; SameSite=Lax`
 
+      // 4. Role-based redirect
       if (redirectTarget) {
         router.push(redirectTarget)
       } else if (role === "student") {
@@ -96,7 +95,7 @@ function LoginForm() {
         router.push("/admin/dashboard")
       }
     } catch (err: any) {
-      setError(err?.message || "Authentication failed. Please verify credentials.")
+      setError(err?.message || "An unexpected authentication error occurred.")
     } finally {
       setIsLoading(false)
     }

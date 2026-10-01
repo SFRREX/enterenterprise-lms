@@ -5,7 +5,23 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
-export default function StudentDashboardPage() {
+import { cookies } from "next/headers"
+import { AUTH_COOKIE_NAME } from "@/lib/auth"
+
+export default async function StudentDashboardPage() {
+  const cookieStore = await cookies()
+  const sessionCookie = cookieStore.get(AUTH_COOKIE_NAME)
+  let studentName = "Student"
+
+  if (sessionCookie?.value) {
+    try {
+      const decoded = JSON.parse(decodeURIComponent(sessionCookie.value))
+      if (decoded.name) studentName = decoded.name
+    } catch {
+      // fallback
+    }
+  }
+
   const currentBatch = {
     name: "Cohort 2026-Alpha",
     code: "BATCH-26A",
@@ -71,7 +87,7 @@ export default function StudentDashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-[#1d1d1f]">
-              Welcome back, Alex
+              Welcome back, {studentName}
             </h1>
             <p className="text-[#7a7a7a] mt-1 text-sm">
               Enrolled in <span className="font-medium text-[#1d1d1f]">{currentBatch.name}</span> ({currentBatch.code})
