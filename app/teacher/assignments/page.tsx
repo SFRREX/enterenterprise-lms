@@ -21,44 +21,7 @@ interface Submission {
 }
 
 export default function TeacherAssignmentsPage() {
-  const [submissions, setSubmissions] = useState<Submission[]>([
-    {
-      id: "sub-1",
-      student: "Alex Rivera",
-      assignment: "Assignment 3: Implement Zero-Trust RLS Policies",
-      course: "Advanced Full-Stack Engineering",
-      submittedAt: "Today at 11:20 AM",
-      file: "rls_policies_submission.zip",
-      fileSize: "1.4 MB",
-      status: "Submitted",
-      grade: null,
-      feedback: ""
-    },
-    {
-      id: "sub-2",
-      student: "Jordan Lee",
-      assignment: "Assignment 3: Implement Zero-Trust RLS Policies",
-      course: "Advanced Full-Stack Engineering",
-      submittedAt: "Today at 10:15 AM",
-      file: "jordan_rls.sql",
-      fileSize: "18 KB",
-      status: "Submitted",
-      grade: null,
-      feedback: ""
-    },
-    {
-      id: "sub-3",
-      student: "Maya Patel",
-      assignment: "Assignment 2: Cloudflare R2 Presigned Upload Worker",
-      course: "Advanced Full-Stack Engineering",
-      submittedAt: "Sep 28, 2026",
-      file: "r2_worker.ts",
-      fileSize: "24 KB",
-      status: "Graded",
-      grade: "98/100",
-      feedback: "Exceptional edge architecture design and error boundaries."
-    }
-  ])
+  const [submissions, setSubmissions] = useState<Submission[]>([])
 
   const [activeSubmission, setActiveSubmission] = useState<Submission | null>(null)
   const [scoreInput, setScoreInput] = useState<string>("95")
@@ -102,64 +65,76 @@ export default function TeacherAssignmentsPage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-[#1d1d1f]">Assignment Submissions & Grading</h1>
             <p className="text-sm text-[#7a7a7a] mt-0.5">
-              Review student code, download uploaded archives from R2, and submit rubric scores.
+              Review student code, download uploaded archives from secure storage, and submit rubric scores.
             </p>
           </div>
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Student</th>
-                <th className="py-3.5 px-6">Assignment / Course</th>
-                <th className="py-3.5 px-6">Cloudflare R2 Object</th>
-                <th className="py-3.5 px-6">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {submissions.map((sub) => (
-                <tr key={sub.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{sub.student}</td>
-                  <td className="py-4 px-6">
-                    <p className="text-[#1d1d1f] font-medium">{sub.assignment}</p>
-                    <p className="text-xs text-[#7a7a7a]">{sub.course}</p>
-                  </td>
-                  <td className="py-4 px-6">
-                    <button
-                      onClick={() => {
-                        setNotification(`Triggered signed R2 download link for "${sub.file}" (TTL 15 mins).`)
-                        setTimeout(() => setNotification(null), 4000)
-                      }}
-                      className="font-mono text-xs text-[#0066cc] flex items-center gap-1 hover:underline cursor-pointer"
-                    >
-                      <Download className="w-3.5 h-3.5" /> {sub.file}
-                    </button>
-                    <span className="text-xs text-[#7a7a7a]">{sub.fileSize}</span>
-                  </td>
-                  <td className="py-4 px-6">
-                    <Badge variant={sub.status === "Graded" ? "success" : "warning"}>
-                      {sub.status === "Graded" ? `Graded (${sub.grade})` : "Pending Grade"}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    <Button
-                      variant={sub.status === "Submitted" ? "primary" : "secondary"}
-                      size="sm"
-                      onClick={() => {
-                        setActiveSubmission(sub)
-                        setScoreInput(sub.grade ? sub.grade.split("/")[0] : "95")
-                        setFeedbackInput(sub.feedback || "Well implemented structure and clean tests.")
-                      }}
-                    >
-                      {sub.status === "Submitted" ? "Grade & Feedback" : "Edit Grade"}
-                    </Button>
-                  </td>
+          {submissions.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+                <Download className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1d1d1f]">No Submissions Received</h3>
+              <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto">
+                Student submissions will appear here once learners complete problem sets and upload coursework artifacts.
+              </p>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Student</th>
+                  <th className="py-3.5 px-6">Assignment / Course</th>
+                  <th className="py-3.5 px-6">Submitted Object</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {submissions.map((sub) => (
+                  <tr key={sub.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{sub.student}</td>
+                    <td className="py-4 px-6">
+                      <p className="text-[#1d1d1f] font-medium">{sub.assignment}</p>
+                      <p className="text-xs text-[#7a7a7a]">{sub.course}</p>
+                    </td>
+                    <td className="py-4 px-6">
+                      <button
+                        onClick={() => {
+                          setNotification(`Triggered signed download link for "${sub.file}" (TTL 15 mins).`)
+                          setTimeout(() => setNotification(null), 4000)
+                        }}
+                        className="font-mono text-xs text-[#0066cc] flex items-center gap-1 hover:underline cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" /> {sub.file}
+                      </button>
+                      <span className="text-xs text-[#7a7a7a]">{sub.fileSize}</span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <Badge variant={sub.status === "Graded" ? "success" : "warning"}>
+                        {sub.status === "Graded" ? `Graded (${sub.grade})` : "Pending Grade"}
+                      </Badge>
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <Button
+                        variant={sub.status === "Submitted" ? "primary" : "secondary"}
+                        size="sm"
+                        onClick={() => {
+                          setActiveSubmission(sub)
+                          setScoreInput(sub.grade ? sub.grade.split("/")[0] : "95")
+                          setFeedbackInput(sub.feedback || "Well implemented structure and clean tests.")
+                        }}
+                      >
+                        {sub.status === "Submitted" ? "Grade & Feedback" : "Edit Grade"}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
 

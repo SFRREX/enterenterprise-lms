@@ -8,35 +8,7 @@ import { Modal } from "@/components/ui/modal"
 import { Mail, Plus, CheckCircle2 } from "lucide-react"
 
 export default function AdminTeachersPage() {
-  const [teachers, setTeachers] = useState([
-    {
-      id: "tch-1",
-      name: "Dr. Evelyn Reed",
-      email: "evelyn.reed@faculty.elms.edu",
-      department: "Computer Science & Systems",
-      assignedCoursesCount: 2,
-      activeStudentsCount: 240,
-      status: "Active Faculty"
-    },
-    {
-      id: "tch-2",
-      name: "Marcus Vance",
-      email: "marcus.vance@faculty.elms.edu",
-      department: "Cloud & Distributed Computing",
-      assignedCoursesCount: 1,
-      activeStudentsCount: 98,
-      status: "Active Faculty"
-    },
-    {
-      id: "tch-3",
-      name: "Sarah Jenkins",
-      email: "sarah.jenkins@faculty.elms.edu",
-      department: "Cybersecurity & Cryptography",
-      assignedCoursesCount: 1,
-      activeStudentsCount: 0,
-      status: "Curriculum Author"
-    }
-  ])
+  const [teachers, setTeachers] = useState<any[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [assignModalOpen, setAssignModalOpen] = useState(false)
@@ -105,45 +77,65 @@ export default function AdminTeachersPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Faculty Name</th>
-                <th className="py-3.5 px-6">Department</th>
-                <th className="py-3.5 px-6">Assigned Courses</th>
-                <th className="py-3.5 px-6">Active Learners</th>
-                <th className="py-3.5 px-6">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {teachers.map((t) => (
-                <tr key={t.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6">
-                    <p className="font-semibold text-[#1d1d1f]">{t.name}</p>
-                    <p className="text-xs text-[#7a7a7a] flex items-center gap-1">
-                      <Mail className="w-3 h-3" /> {t.email}
-                    </p>
-                  </td>
-                  <td className="py-4 px-6 text-[#1d1d1f]">{t.department}</td>
-                  <td className="py-4 px-6 text-[#0066cc] font-medium">{t.assignedCoursesCount} Courses</td>
-                  <td className="py-4 px-6 text-[#7a7a7a]">{t.activeStudentsCount} Students</td>
-                  <td className="py-4 px-6">
-                    <Badge variant="success">{t.status}</Badge>
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleAssignCourses(t.name)}
-                    >
-                      Assign Courses
-                    </Button>
-                  </td>
+          {teachers.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+                <Mail className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1d1d1f]">No Faculty Members Added</h3>
+              <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto mb-5">
+                Register instructors and curriculum authors to oversee courses, grade student assignments, and conduct live cohorts.
+              </p>
+              <Button
+                variant="primary"
+                size="md"
+                className="gap-2 cursor-pointer inline-flex"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Plus className="w-4 h-4" /> Add Faculty Member
+              </Button>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Faculty Name</th>
+                  <th className="py-3.5 px-6">Department</th>
+                  <th className="py-3.5 px-6">Assigned Courses</th>
+                  <th className="py-3.5 px-6">Active Learners</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {teachers.map((t) => (
+                  <tr key={t.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6">
+                      <p className="font-semibold text-[#1d1d1f]">{t.name}</p>
+                      <p className="text-xs text-[#7a7a7a] flex items-center gap-1">
+                        <Mail className="w-3 h-3" /> {t.email}
+                      </p>
+                    </td>
+                    <td className="py-4 px-6 text-[#1d1d1f]">{t.department}</td>
+                    <td className="py-4 px-6 text-[#0066cc] font-medium">{t.assignedCoursesCount} Courses</td>
+                    <td className="py-4 px-6 text-[#7a7a7a]">{t.activeStudentsCount} Students</td>
+                    <td className="py-4 px-6">
+                      <Badge variant="success">{t.status}</Badge>
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleAssignCourses(t.name)}
+                      >
+                        Assign Courses
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
 

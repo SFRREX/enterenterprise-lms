@@ -8,34 +8,15 @@ import { Modal } from "@/components/ui/modal"
 import { Plus, CheckCircle2 } from "lucide-react"
 
 export default function AdminAssignmentsPage() {
-  const [assignments, setAssignments] = useState([
-    {
-      id: "asg-1",
-      title: "Assignment 3: Implement Zero-Trust RLS Policies",
-      course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-      batch: "Cohort 2026-Alpha",
-      submissionsCount: 136,
-      pendingCount: 14,
-      dueDate: "Tomorrow at 23:59"
-    },
-    {
-      id: "asg-2",
-      title: "Assignment 2: Cloudflare R2 Presigned Upload Worker",
-      course: "Cloud Infrastructure, Distributed Systems & Edge R2",
-      batch: "Cohort 2026-Beta",
-      submissionsCount: 94,
-      pendingCount: 0,
-      dueDate: "Sep 28, 2026"
-    }
-  ])
+  const [assignments, setAssignments] = useState<any[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [notification, setNotification] = useState<string | null>(null)
 
   const [newAsg, setNewAsg] = useState({
     title: "",
-    course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-    batch: "Cohort 2026-Alpha",
+    course: "General Institutional Curriculum",
+    batch: "General Cohort",
     dueDate: "In 7 days"
   })
 
@@ -55,7 +36,7 @@ export default function AdminAssignmentsPage() {
 
     setAssignments([created, ...assignments])
     setIsModalOpen(false)
-    setNewAsg({ title: "", course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL", batch: "Cohort 2026-Alpha", dueDate: "In 7 days" })
+    setNewAsg({ title: "", course: "General Institutional Curriculum", batch: "General Cohort", dueDate: "In 7 days" })
     setNotification(`Successfully published coursework "${created.title}"!`)
     setTimeout(() => setNotification(null), 4000)
   }
@@ -90,35 +71,55 @@ export default function AdminAssignmentsPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Assignment Title</th>
-                <th className="py-3.5 px-6">Course / Batch</th>
-                <th className="py-3.5 px-6">Submissions</th>
-                <th className="py-3.5 px-6">Pending Review</th>
-                <th className="py-3.5 px-6">Deadline</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {assignments.map((a) => (
-                <tr key={a.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{a.title}</td>
-                  <td className="py-4 px-6">
-                    <p className="text-[#1d1d1f]">{a.course}</p>
-                    <p className="text-xs text-[#7a7a7a]">{a.batch}</p>
-                  </td>
-                  <td className="py-4 px-6 text-[#1d1d1f] font-mono">{a.submissionsCount}</td>
-                  <td className="py-4 px-6">
-                    <Badge variant={a.pendingCount > 0 ? "warning" : "success"}>
-                      {a.pendingCount} Pending
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-6 text-xs text-[#7a7a7a]">{a.dueDate}</td>
+          {assignments.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+                <Plus className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1d1d1f]">No Coursework Created</h3>
+              <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto mb-5">
+                Assign problem sets, laboratory exercises, and capstone projects for cohorts and track submissions.
+              </p>
+              <Button
+                variant="primary"
+                size="md"
+                className="gap-2 cursor-pointer inline-flex"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Plus className="w-4 h-4" /> Create Coursework
+              </Button>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Assignment Title</th>
+                  <th className="py-3.5 px-6">Course / Batch</th>
+                  <th className="py-3.5 px-6">Submissions</th>
+                  <th className="py-3.5 px-6">Pending Review</th>
+                  <th className="py-3.5 px-6">Deadline</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {assignments.map((a) => (
+                  <tr key={a.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{a.title}</td>
+                    <td className="py-4 px-6">
+                      <p className="text-[#1d1d1f]">{a.course}</p>
+                      <p className="text-xs text-[#7a7a7a]">{a.batch}</p>
+                    </td>
+                    <td className="py-4 px-6 text-[#1d1d1f] font-mono">{a.submissionsCount}</td>
+                    <td className="py-4 px-6">
+                      <Badge variant={a.pendingCount > 0 ? "warning" : "success"}>
+                        {a.pendingCount} Pending
+                      </Badge>
+                    </td>
+                    <td className="py-4 px-6 text-xs text-[#7a7a7a]">{a.dueDate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
 

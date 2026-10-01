@@ -22,36 +22,10 @@ interface Assignment {
 }
 
 export default function StudentAssignmentsPage() {
-  const [assignments, setAssignments] = useState<Assignment[]>([
-    {
-      id: "asg-1",
-      title: "Assignment 3: Implement Zero-Trust RLS Policies",
-      course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-      dueDate: "Tomorrow at 23:59",
-      points: 100,
-      status: "pending",
-      grade: null,
-      allowedTypes: "PDF, ZIP (max 25MB)",
-      description: "Write and apply SQL policies to ensure multi-tenant batch isolation and protect student privacy."
-    },
-    {
-      id: "asg-2",
-      title: "Assignment 2: Cloudflare R2 Presigned Upload Worker",
-      course: "Cloud Infrastructure, Distributed Systems & Edge R2",
-      dueDate: "Submitted 2 days ago",
-      points: 100,
-      pointsTotal: 100,
-      pointsEarned: 95,
-      status: "graded",
-      grade: 95,
-      allowedTypes: "ZIP, TypeScript file",
-      description: "Build an edge handler creating 15-minute signed PUT URLs with content-length restrictions.",
-      feedback: "Clean architecture, presigned URLs appropriately time-bounded to 15 minutes."
-    } as Assignment
-  ])
+  const [assignments, setAssignments] = useState<Assignment[]>([])
 
   const [activeUpload, setActiveUpload] = useState<Assignment | null>(null)
-  const [selectedFileName, setSelectedFileName] = useState<string>("rls_submission_v1.zip")
+  const [selectedFileName, setSelectedFileName] = useState<string>("submission_v1.zip")
   const [notification, setNotification] = useState<string | null>(null)
 
   const handleUploadSubmit = (e: React.FormEvent) => {
@@ -69,7 +43,7 @@ export default function StudentAssignmentsPage() {
       return a
     }))
 
-    setNotification(`Successfully uploaded ${selectedFileName} via presigned Cloudflare R2 URL!`)
+    setNotification(`Successfully uploaded ${selectedFileName} via presigned storage URL!`)
     setActiveUpload(null)
     setTimeout(() => setNotification(null), 4000)
   }
@@ -93,64 +67,76 @@ export default function StudentAssignmentsPage() {
           </p>
         </div>
 
-        <div className="space-y-6">
-          {assignments.map((item) => (
-            <Card key={item.id} hoverable={false} className="p-6">
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Badge variant={item.status === "graded" ? "success" : item.status === "submitted" ? "default" : "warning"}>
-                      {item.status === "graded" ? `Graded: ${item.grade}/${item.points}` : item.status === "submitted" ? "Under Faculty Review" : "Action Required"}
-                    </Badge>
-                    <span className="text-xs text-[#7a7a7a]">{item.course}</span>
-                  </div>
-
-                  <h2 className="text-lg font-bold text-[#1d1d1f] tracking-tight">{item.title}</h2>
-                  <p className="text-xs text-[#7a7a7a] max-w-2xl leading-relaxed">{item.description}</p>
-
-                  <div className="flex items-center gap-4 text-xs text-[#7a7a7a] pt-2">
-                    <span className="flex items-center gap-1 font-medium text-[#1d1d1f]">
-                      <Clock className="w-3.5 h-3.5 text-amber-600" /> {item.dueDate}
-                    </span>
-                    <span>Max Points: {item.points}</span>
-                    {item.allowedTypes && <span>Format: {item.allowedTypes}</span>}
-                  </div>
-
-                  {item.feedback && (
-                    <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-800">
-                      <strong>Instructor Feedback:</strong> {item.feedback}
+        {assignments.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-black/[0.06] p-12 text-center shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+              <Upload className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-semibold text-[#1d1d1f]">No Pending Assignments</h3>
+            <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto">
+              You do not have any active coursework or pending assignment submissions due at this time.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {assignments.map((item) => (
+              <Card key={item.id} hoverable={false} className="p-6">
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Badge variant={item.status === "graded" ? "success" : item.status === "submitted" ? "default" : "warning"}>
+                        {item.status === "graded" ? `Graded: ${item.grade}/${item.points}` : item.status === "submitted" ? "Under Faculty Review" : "Action Required"}
+                      </Badge>
+                      <span className="text-xs text-[#7a7a7a]">{item.course}</span>
                     </div>
-                  )}
-                </div>
 
-                <div className="shrink-0 pt-2">
-                  {item.status === "pending" ? (
-                    <Button
-                      variant="primary"
-                      size="md"
-                      className="gap-2"
-                      onClick={() => setActiveUpload(item)}
-                    >
-                      <Upload className="w-4 h-4" /> Upload Submission
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="secondary"
-                      size="md"
-                      className="gap-2"
-                      onClick={() => {
-                        setNotification(`Fetching graded submission archive from Cloudflare R2...`)
-                        setTimeout(() => setNotification(null), 4000)
-                      }}
-                    >
-                      <FileText className="w-4 h-4" /> View Graded File
-                    </Button>
-                  )}
+                    <h2 className="text-lg font-bold text-[#1d1d1f] tracking-tight">{item.title}</h2>
+                    <p className="text-xs text-[#7a7a7a] max-w-2xl leading-relaxed">{item.description}</p>
+
+                    <div className="flex items-center gap-4 text-xs text-[#7a7a7a] pt-2">
+                      <span className="flex items-center gap-1 font-medium text-[#1d1d1f]">
+                        <Clock className="w-3.5 h-3.5 text-amber-600" /> {item.dueDate}
+                      </span>
+                      <span>Max Points: {item.points}</span>
+                      {item.allowedTypes && <span>Format: {item.allowedTypes}</span>}
+                    </div>
+
+                    {item.feedback && (
+                      <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-800">
+                        <strong>Instructor Feedback:</strong> {item.feedback}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="shrink-0 pt-2">
+                    {item.status === "pending" ? (
+                      <Button
+                        variant="primary"
+                        size="md"
+                        className="gap-2"
+                        onClick={() => setActiveUpload(item)}
+                      >
+                        <Upload className="w-4 h-4" /> Upload Submission
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        size="md"
+                        className="gap-2"
+                        onClick={() => {
+                          setNotification(`Fetching graded submission archive from secure storage...`)
+                          setTimeout(() => setNotification(null), 4000)
+                        }}
+                      >
+                        <FileText className="w-4 h-4" /> View Graded File
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </main>
 
       {/* Modal: Upload Submission */}

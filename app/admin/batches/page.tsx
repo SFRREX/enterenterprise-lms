@@ -10,38 +10,16 @@ import { Modal } from "@/components/ui/modal"
 import { Plus, Users, BookOpen, Calendar, CheckCircle2 } from "lucide-react"
 
 export default function AdminBatchesPage() {
-  const [batches, setBatches] = useState([
-    {
-      id: "b-1",
-      name: "Cohort 2026-Alpha (Full-Stack Engineering)",
-      code: "BATCH-26A",
-      studentsCount: 142,
-      coursesCount: 4,
-      startDate: "Jan 15, 2026",
-      endDate: "Dec 20, 2026",
-      status: "Active"
-    },
-    {
-      id: "b-2",
-      name: "Cohort 2026-Beta (Cloud Systems Architecture)",
-      code: "BATCH-26B",
-      studentsCount: 98,
-      coursesCount: 3,
-      startDate: "Mar 01, 2026",
-      endDate: "Nov 30, 2026",
-      status: "Active"
-    },
-    {
-      id: "b-3",
-      name: "AI Systems Engineering 2026",
-      code: "BATCH-AI1",
-      studentsCount: 85,
-      coursesCount: 5,
-      startDate: "Apr 10, 2026",
-      endDate: "Jan 15, 2027",
-      status: "Active"
-    }
-  ])
+  const [batches, setBatches] = useState<Array<{
+    id: string
+    name: string
+    code: string
+    studentsCount: number
+    coursesCount: number
+    startDate: string
+    endDate: string
+    status: string
+  }>>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [rosterModal, setRosterModal] = useState<string | null>(null)
@@ -105,45 +83,64 @@ export default function AdminBatchesPage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {batches.map((batch) => (
-            <Card key={batch.id} className="flex flex-col justify-between p-6">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <Badge variant="success">{batch.status}</Badge>
-                  <span className="font-mono text-xs text-[#7a7a7a]">{batch.code}</span>
-                </div>
-                <h2 className="text-base font-bold text-[#1d1d1f] tracking-tight leading-snug">{batch.name}</h2>
+        {batches.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {batches.map((batch) => (
+              <Card key={batch.id} className="flex flex-col justify-between p-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="success">{batch.status}</Badge>
+                    <span className="font-mono text-xs text-[#7a7a7a]">{batch.code}</span>
+                  </div>
+                  <h2 className="text-base font-bold text-[#1d1d1f] tracking-tight leading-snug">{batch.name}</h2>
 
-                <div className="space-y-1.5 text-xs text-[#7a7a7a] pt-2 border-t border-[#f0f0f2]">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-3.5 h-3.5 text-[#0066cc]" />
-                    <span>{batch.studentsCount} Students Enrolled</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="w-3.5 h-3.5 text-[#0066cc]" />
-                    <span>{batch.coursesCount} Active Courses</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-[#7a7a7a]" />
-                    <span>{batch.startDate} &ndash; {batch.endDate}</span>
+                  <div className="space-y-1.5 text-xs text-[#7a7a7a] pt-2 border-t border-[#f0f0f2]">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-3.5 h-3.5 text-[#0066cc]" />
+                      <span>{batch.studentsCount} Students Enrolled</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="w-3.5 h-3.5 text-[#0066cc]" />
+                      <span>{batch.coursesCount} Active Courses</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-[#7a7a7a]" />
+                      <span>{batch.startDate} &ndash; {batch.endDate}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="pt-6">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => setRosterModal(batch.name)}
-                >
-                  Manage Roster & Courses
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
+                <div className="pt-6">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => setRosterModal(batch.name)}
+                  >
+                    Manage Roster & Courses
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-[18px] bg-white border border-[#e0e0e0] p-12 text-center space-y-4">
+            <div className="w-14 h-14 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto text-[#7a7a7a]">
+              <Users className="w-7 h-7" />
+            </div>
+            <div className="space-y-1">
+              <h2 className="text-base font-semibold text-[#1d1d1f]">No Cohorts Initialized</h2>
+              <p className="text-xs text-[#7a7a7a] max-w-md mx-auto">
+                No academic cohorts have been configured yet. Click below to establish your initial student batch.
+              </p>
+            </div>
+            <div className="pt-2">
+              <Button variant="primary" size="md" onClick={() => setIsModalOpen(true)}>
+                <Plus className="w-4 h-4 mr-1.5" /> Initialize First Cohort
+              </Button>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Modal: Create Cohort */}

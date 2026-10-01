@@ -8,35 +8,15 @@ import { Modal } from "@/components/ui/modal"
 import { Mail, Plus, CheckCircle2 } from "lucide-react"
 
 export default function AdminStudentsPage() {
-  const [students, setStudents] = useState([
-    {
-      id: "std-1",
-      name: "Alex Rivera",
-      email: "alex.rivera@student.elms.edu",
-      batch: "Cohort 2026-Alpha",
-      enrolledAt: "Jan 15, 2026",
-      status: "Active",
-      gpa: "3.92"
-    },
-    {
-      id: "std-2",
-      name: "Jordan Lee",
-      email: "jordan.lee@student.elms.edu",
-      batch: "Cohort 2026-Alpha",
-      enrolledAt: "Jan 16, 2026",
-      status: "Active",
-      gpa: "3.85"
-    },
-    {
-      id: "std-3",
-      name: "Maya Patel",
-      email: "maya.patel@student.elms.edu",
-      batch: "Cohort 2026-Beta",
-      enrolledAt: "Mar 01, 2026",
-      status: "Active",
-      gpa: "4.00"
-    }
-  ])
+  const [students, setStudents] = useState<Array<{
+    id: string
+    name: string
+    email: string
+    batch: string
+    enrolledAt: string
+    status: string
+    gpa: string
+  }>>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null)
@@ -45,7 +25,7 @@ export default function AdminStudentsPage() {
   const [newStudent, setNewStudent] = useState({
     name: "",
     email: "",
-    batch: "Cohort 2026-Alpha"
+    batch: "Unassigned"
   })
 
   const handleEnrollStudent = (e: React.FormEvent) => {
@@ -64,8 +44,8 @@ export default function AdminStudentsPage() {
 
     setStudents([created, ...students])
     setIsModalOpen(false)
-    setNewStudent({ name: "", email: "", batch: "Cohort 2026-Alpha" })
-    setNotification(`Successfully enrolled ${created.name} into ${created.batch}!`)
+    setNewStudent({ name: "", email: "", batch: "Unassigned" })
+    setNotification(`Successfully enrolled ${created.name}!`)
     setTimeout(() => setNotification(null), 4000)
   }
 
@@ -99,45 +79,64 @@ export default function AdminStudentsPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Student</th>
-                <th className="py-3.5 px-6">Assigned Batch</th>
-                <th className="py-3.5 px-6">Enrolled Date</th>
-                <th className="py-3.5 px-6">GPA</th>
-                <th className="py-3.5 px-6">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {students.map((s) => (
-                <tr key={s.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6">
-                    <p className="font-semibold text-[#1d1d1f]">{s.name}</p>
-                    <p className="text-xs text-[#7a7a7a] flex items-center gap-1">
-                      <Mail className="w-3 h-3" /> {s.email}
-                    </p>
-                  </td>
-                  <td className="py-4 px-6 text-[#1d1d1f]">{s.batch}</td>
-                  <td className="py-4 px-6 text-[#7a7a7a]">{s.enrolledAt}</td>
-                  <td className="py-4 px-6 font-mono font-semibold text-[#0066cc]">{s.gpa}</td>
-                  <td className="py-4 px-6">
-                    <Badge variant="success">{s.status}</Badge>
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setSelectedStudent(s.name)}
-                    >
-                      Manage
-                    </Button>
-                  </td>
+          {students.length > 0 ? (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Student</th>
+                  <th className="py-3.5 px-6">Assigned Batch</th>
+                  <th className="py-3.5 px-6">Enrolled Date</th>
+                  <th className="py-3.5 px-6">GPA</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {students.map((s) => (
+                  <tr key={s.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6">
+                      <p className="font-semibold text-[#1d1d1f]">{s.name}</p>
+                      <p className="text-xs text-[#7a7a7a] flex items-center gap-1">
+                        <Mail className="w-3 h-3" /> {s.email}
+                      </p>
+                    </td>
+                    <td className="py-4 px-6 text-[#1d1d1f]">{s.batch}</td>
+                    <td className="py-4 px-6 text-[#7a7a7a]">{s.enrolledAt}</td>
+                    <td className="py-4 px-6 font-mono font-semibold text-[#0066cc]">{s.gpa}</td>
+                    <td className="py-4 px-6">
+                      <Badge variant="success">{s.status}</Badge>
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setSelectedStudent(s.name)}
+                      >
+                        Manage
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="p-12 text-center space-y-4">
+              <div className="w-14 h-14 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto text-[#7a7a7a]">
+                <Mail className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <h2 className="text-base font-semibold text-[#1d1d1f]">No Students Enrolled Yet</h2>
+                <p className="text-xs text-[#7a7a7a] max-w-sm mx-auto">
+                  Your institutional directory is currently empty. Click below to register your first student.
+                </p>
+              </div>
+              <div className="pt-2">
+                <Button variant="primary" size="md" onClick={() => setIsModalOpen(true)}>
+                  <Plus className="w-4 h-4 mr-1.5" /> Enroll First Student
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 

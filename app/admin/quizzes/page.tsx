@@ -8,34 +8,15 @@ import { Modal } from "@/components/ui/modal"
 import { Plus, CheckCircle2 } from "lucide-react"
 
 export default function AdminQuizzesPage() {
-  const [quizzes, setQuizzes] = useState([
-    {
-      id: "qz-101",
-      title: "Quiz 2: Distributed Database Replication & Indexes",
-      course: "Cloud Infrastructure, Distributed Systems & Edge R2",
-      batch: "Cohort 2026-Beta",
-      totalAttempts: 138,
-      avgScore: "88.4%",
-      status: "Published"
-    },
-    {
-      id: "qz-102",
-      title: "Quiz 1: HTTP Security Headers & Cross-Origin Policies",
-      course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-      batch: "Cohort 2026-Alpha",
-      totalAttempts: 142,
-      avgScore: "91.2%",
-      status: "Published"
-    }
-  ])
+  const [quizzes, setQuizzes] = useState<any[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [notification, setNotification] = useState<string | null>(null)
 
   const [newQuiz, setNewQuiz] = useState({
     title: "",
-    course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-    batch: "Cohort 2026-Alpha",
+    course: "General Institutional Curriculum",
+    batch: "General Cohort",
     timeLimit: 20
   })
 
@@ -55,7 +36,7 @@ export default function AdminQuizzesPage() {
 
     setQuizzes([created, ...quizzes])
     setIsModalOpen(false)
-    setNewQuiz({ title: "", course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL", batch: "Cohort 2026-Alpha", timeLimit: 20 })
+    setNewQuiz({ title: "", course: "General Institutional Curriculum", batch: "General Cohort", timeLimit: 20 })
     setNotification(`Successfully created quiz assessment "${created.title}"!`)
     setTimeout(() => setNotification(null), 4000)
   }
@@ -90,33 +71,53 @@ export default function AdminQuizzesPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Quiz Title</th>
-                <th className="py-3.5 px-6">Course & Batch</th>
-                <th className="py-3.5 px-6">Student Attempts</th>
-                <th className="py-3.5 px-6">Average Score</th>
-                <th className="py-3.5 px-6">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {quizzes.map((q) => (
-                <tr key={q.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{q.title}</td>
-                  <td className="py-4 px-6">
-                    <p className="text-[#1d1d1f]">{q.course}</p>
-                    <p className="text-xs text-[#7a7a7a]">{q.batch}</p>
-                  </td>
-                  <td className="py-4 px-6 font-mono text-[#1d1d1f]">{q.totalAttempts}</td>
-                  <td className="py-4 px-6 font-mono font-semibold text-emerald-600">{q.avgScore}</td>
-                  <td className="py-4 px-6">
-                    <Badge variant="success">{q.status}</Badge>
-                  </td>
+          {quizzes.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+                <Plus className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1d1d1f]">No Quiz Assessments Published</h3>
+              <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto mb-5">
+                Create quizzes with multiple-choice questions, automated scoring criteria, and timed durations.
+              </p>
+              <Button
+                variant="primary"
+                size="md"
+                className="gap-2 cursor-pointer inline-flex"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Plus className="w-4 h-4" /> Create Assessment
+              </Button>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Quiz Title</th>
+                  <th className="py-3.5 px-6">Course & Batch</th>
+                  <th className="py-3.5 px-6">Student Attempts</th>
+                  <th className="py-3.5 px-6">Average Score</th>
+                  <th className="py-3.5 px-6">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {quizzes.map((q) => (
+                  <tr key={q.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{q.title}</td>
+                    <td className="py-4 px-6">
+                      <p className="text-[#1d1d1f]">{q.course}</p>
+                      <p className="text-xs text-[#7a7a7a]">{q.batch}</p>
+                    </td>
+                    <td className="py-4 px-6 font-mono text-[#1d1d1f]">{q.totalAttempts}</td>
+                    <td className="py-4 px-6 font-mono font-semibold text-emerald-600">{q.avgScore}</td>
+                    <td className="py-4 px-6">
+                      <Badge variant="success">{q.status}</Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
 

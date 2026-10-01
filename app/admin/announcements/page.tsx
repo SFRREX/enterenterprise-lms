@@ -8,24 +8,7 @@ import { Modal } from "@/components/ui/modal"
 import { Plus, CheckCircle2 } from "lucide-react"
 
 export default function AdminAnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState([
-    {
-      id: "ann-1",
-      title: "Upcoming Maintenance: PostgreSQL Read Replica Optimization",
-      target: "All Active Cohorts",
-      author: "ELMS Operations",
-      publishedAt: "Sep 29, 2026",
-      isPinned: true
-    },
-    {
-      id: "ann-2",
-      title: "Assignment 3 Deadline Extended by 24 Hours",
-      target: "Cohort 2026-Alpha",
-      author: "Dr. Evelyn Reed",
-      publishedAt: "Sep 27, 2026",
-      isPinned: false
-    }
-  ])
+  const [announcements, setAnnouncements] = useState<any[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [notification, setNotification] = useState<string | null>(null)
@@ -87,34 +70,54 @@ export default function AdminAnnouncementsPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Announcement</th>
-                <th className="py-3.5 px-6">Target Audience</th>
-                <th className="py-3.5 px-6">Author</th>
-                <th className="py-3.5 px-6">Date</th>
-                <th className="py-3.5 px-6">State</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {announcements.map((a) => (
-                <tr key={a.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{a.title}</td>
-                  <td className="py-4 px-6 text-[#0066cc] text-xs font-medium">{a.target}</td>
-                  <td className="py-4 px-6 text-[#7a7a7a] text-xs">{a.author}</td>
-                  <td className="py-4 px-6 text-[#7a7a7a] text-xs">{a.publishedAt}</td>
-                  <td className="py-4 px-6">
-                    {a.isPinned ? (
-                      <Badge variant="warning">Pinned</Badge>
-                    ) : (
-                      <Badge variant="neutral">Standard</Badge>
-                    )}
-                  </td>
+          {announcements.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+                <Plus className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1d1d1f]">No Announcements Broadcasted</h3>
+              <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto mb-5">
+                Send campus-wide announcements or cohort-specific notifications that appear on student dashboards.
+              </p>
+              <Button
+                variant="primary"
+                size="md"
+                className="gap-2 cursor-pointer inline-flex"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Plus className="w-4 h-4" /> Broadcast Announcement
+              </Button>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Announcement</th>
+                  <th className="py-3.5 px-6">Target Audience</th>
+                  <th className="py-3.5 px-6">Author</th>
+                  <th className="py-3.5 px-6">Date</th>
+                  <th className="py-3.5 px-6">State</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {announcements.map((a) => (
+                  <tr key={a.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{a.title}</td>
+                    <td className="py-4 px-6 text-[#0066cc] text-xs font-medium">{a.target}</td>
+                    <td className="py-4 px-6 text-[#7a7a7a] text-xs">{a.author}</td>
+                    <td className="py-4 px-6 text-[#7a7a7a] text-xs">{a.publishedAt}</td>
+                    <td className="py-4 px-6">
+                      {a.isPinned ? (
+                        <Badge variant="warning">Pinned</Badge>
+                      ) : (
+                        <Badge variant="neutral">Standard</Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
 

@@ -18,35 +18,7 @@ interface Course {
 }
 
 export default function AdminCoursesPage() {
-  const [courses, setCourses] = useState<Course[]>([
-    {
-      id: "crs-1",
-      title: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-      batch: "Cohort 2026-Alpha",
-      instructor: "Dr. Evelyn Reed",
-      chaptersCount: 6,
-      lessonsCount: 32,
-      isPublished: true
-    },
-    {
-      id: "crs-2",
-      title: "Cloud Infrastructure, Distributed Systems & Edge R2",
-      batch: "Cohort 2026-Beta",
-      instructor: "Marcus Vance",
-      chaptersCount: 4,
-      lessonsCount: 20,
-      isPublished: true
-    },
-    {
-      id: "crs-3",
-      title: "Secure Authentication, Cryptography & JWT Systems",
-      batch: "Unassigned",
-      instructor: "Sarah Jenkins",
-      chaptersCount: 3,
-      lessonsCount: 18,
-      isPublished: false
-    }
-  ])
+  const [courses, setCourses] = useState<Course[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCourse, setEditingCourse] = useState<Course | null>(null)
@@ -54,8 +26,8 @@ export default function AdminCoursesPage() {
 
   const [newCourse, setNewCourse] = useState({
     title: "",
-    batch: "Cohort 2026-Alpha",
-    instructor: "Dr. Evelyn Reed",
+    batch: "Unassigned",
+    instructor: "Unassigned",
     isPublished: true
   })
 
@@ -110,46 +82,65 @@ export default function AdminCoursesPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Course</th>
-                <th className="py-3.5 px-6">Assigned Batch</th>
-                <th className="py-3.5 px-6">Instructor</th>
-                <th className="py-3.5 px-6">Structure</th>
-                <th className="py-3.5 px-6">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {courses.map((c) => (
-                <tr key={c.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6">
-                    <p className="font-semibold text-[#1d1d1f]">{c.title}</p>
-                  </td>
-                  <td className="py-4 px-6 text-[#7a7a7a]">{c.batch}</td>
-                  <td className="py-4 px-6 text-[#1d1d1f]">{c.instructor}</td>
-                  <td className="py-4 px-6 text-xs text-[#7a7a7a]">
-                    {c.chaptersCount} Chapters &bull; {c.lessonsCount} Lessons
-                  </td>
-                  <td className="py-4 px-6">
-                    <Badge variant={c.isPublished ? "success" : "neutral"}>
-                      {c.isPublished ? "Published" : "Draft"}
-                    </Badge>
-                  </td>
-                  <td className="py-4 px-6 text-right space-x-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setEditingCourse(c)}
-                    >
-                      <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                    </Button>
-                  </td>
+          {courses.length > 0 ? (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Course</th>
+                  <th className="py-3.5 px-6">Assigned Batch</th>
+                  <th className="py-3.5 px-6">Instructor</th>
+                  <th className="py-3.5 px-6">Structure</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {courses.map((c) => (
+                  <tr key={c.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6">
+                      <p className="font-semibold text-[#1d1d1f]">{c.title}</p>
+                    </td>
+                    <td className="py-4 px-6 text-[#7a7a7a]">{c.batch}</td>
+                    <td className="py-4 px-6 text-[#1d1d1f]">{c.instructor}</td>
+                    <td className="py-4 px-6 text-xs text-[#7a7a7a]">
+                      {c.chaptersCount} Chapters &bull; {c.lessonsCount} Lessons
+                    </td>
+                    <td className="py-4 px-6">
+                      <Badge variant={c.isPublished ? "success" : "neutral"}>
+                        {c.isPublished ? "Published" : "Draft"}
+                      </Badge>
+                    </td>
+                    <td className="py-4 px-6 text-right space-x-2">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setEditingCourse(c)}
+                      >
+                        <Edit className="w-3.5 h-3.5 mr-1" /> Edit
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="p-12 text-center space-y-4">
+              <div className="w-14 h-14 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto text-[#7a7a7a]">
+                <Edit className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <h2 className="text-base font-semibold text-[#1d1d1f]">No Courses Created Yet</h2>
+                <p className="text-xs text-[#7a7a7a] max-w-sm mx-auto">
+                  The curriculum catalog is currently empty. Author your first syllabus module or lesson series.
+                </p>
+              </div>
+              <div className="pt-2">
+                <Button variant="primary" size="md" onClick={() => setIsModalOpen(true)}>
+                  <Plus className="w-4 h-4 mr-1.5" /> Create First Course
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 

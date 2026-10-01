@@ -6,24 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Eye } from "lucide-react"
 
 export default function TeacherCoursesPage() {
-  const courses = [
-    {
-      id: "crs-1",
-      title: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-      batch: "Cohort 2026-Alpha",
-      chaptersCount: 6,
-      lessonsCount: 32,
-      activeLearners: 142
-    },
-    {
-      id: "crs-4",
-      title: "Distributed Systems Design & Microservices Architecture",
-      batch: "Cohort 2026-Alpha",
-      chaptersCount: 4,
-      lessonsCount: 22,
-      activeLearners: 98
-    }
-  ]
+  const courses: any[] = []
 
   return (
     <div className="flex min-h-screen bg-[#f5f5f7]">
@@ -34,42 +17,54 @@ export default function TeacherCoursesPage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-[#1d1d1f]">My Assigned Courses</h1>
             <p className="text-sm text-[#7a7a7a] mt-0.5">
-              Upload video lectures, attach R2 handouts, and structure syllabus chapters.
+              Upload video lectures, attach materials, and structure syllabus chapters.
             </p>
           </div>
-          <Button variant="primary" size="md" className="gap-2">
+          <Button variant="primary" size="md" className="gap-2" disabled={courses.length === 0}>
             <Plus className="w-4 h-4" /> Add Chapter / Lesson
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {courses.map((c) => (
-            <Card key={c.id} className="p-6 flex flex-col justify-between">
-              <div className="space-y-3">
-                <Badge variant="default">{c.batch}</Badge>
-                <h2 className="text-lg font-bold text-[#1d1d1f] tracking-tight">{c.title}</h2>
-                <div className="flex items-center gap-4 text-xs text-[#7a7a7a] pt-2 border-t border-[#f0f0f2]">
-                  <span>{c.chaptersCount} Chapters</span>
-                  <span>&bull;</span>
-                  <span>{c.lessonsCount} Lessons</span>
-                  <span>&bull;</span>
-                  <span>{c.activeLearners} Active Students</span>
+        {courses.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-black/[0.06] p-12 text-center shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+              <Eye className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-semibold text-[#1d1d1f]">No Courses Assigned</h3>
+            <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto">
+              You have not been assigned to instruct any active courses. Contact the institutional administrator to assign you to a course curriculum.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {courses.map((c) => (
+              <Card key={c.id} className="p-6 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <Badge variant="default">{c.batch}</Badge>
+                  <h2 className="text-lg font-bold text-[#1d1d1f] tracking-tight">{c.title}</h2>
+                  <div className="flex items-center gap-4 text-xs text-[#7a7a7a] pt-2 border-t border-[#f0f0f2]">
+                    <span>{c.chaptersCount} Chapters</span>
+                    <span>&bull;</span>
+                    <span>{c.lessonsCount} Lessons</span>
+                    <span>&bull;</span>
+                    <span>{c.activeLearners} Active Students</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="pt-6 flex gap-3">
-                <Link href={`/courses/${c.id}`} className="flex-1">
-                  <Button variant="secondary" size="sm" className="w-full gap-1">
-                    <Eye className="w-3.5 h-3.5" /> View as Student
+                <div className="pt-6 flex gap-3">
+                  <Link href={`/courses/${c.id}`} className="flex-1">
+                    <Button variant="secondary" size="sm" className="w-full gap-1">
+                      <Eye className="w-3.5 h-3.5" /> View as Student
+                    </Button>
+                  </Link>
+                  <Button variant="primary" size="sm" className="flex-1">
+                    Edit Curriculum
                   </Button>
-                </Link>
-                <Button variant="primary" size="sm" className="flex-1">
-                  Edit Curriculum
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   )

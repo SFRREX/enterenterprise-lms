@@ -9,34 +9,15 @@ import { Modal } from "@/components/ui/modal"
 import { Plus, ExternalLink, CheckCircle2 } from "lucide-react"
 
 export default function AdminCertificatesPage() {
-  const [certificates, setCertificates] = useState([
-    {
-      id: "cert-1",
-      code: "CERT-2026-8902-AFE",
-      recipient: "Alex Rivera",
-      course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-      batch: "Cohort 2026-Alpha",
-      issueDate: "Sep 24, 2026",
-      status: "Active & Immutable"
-    },
-    {
-      id: "cert-2",
-      code: "CERT-2026-8903-CIS",
-      recipient: "Maya Patel",
-      course: "Cloud Infrastructure, Distributed Systems & Edge R2",
-      batch: "Cohort 2026-Beta",
-      issueDate: "Sep 28, 2026",
-      status: "Active & Immutable"
-    }
-  ])
+  const [certificates, setCertificates] = useState<any[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [notification, setNotification] = useState<string | null>(null)
 
   const [newCert, setNewCert] = useState({
     recipient: "",
-    course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL",
-    batch: "Cohort 2026-Alpha"
+    course: "General Institutional Curriculum",
+    batch: "General Cohort"
   })
 
   const handleIssueCert = (e: React.FormEvent) => {
@@ -56,7 +37,7 @@ export default function AdminCertificatesPage() {
 
     setCertificates([created, ...certificates])
     setIsModalOpen(false)
-    setNewCert({ recipient: "", course: "Advanced Full-Stack Engineering with Next.js & PostgreSQL", batch: "Cohort 2026-Alpha" })
+    setNewCert({ recipient: "", course: "General Institutional Curriculum", batch: "General Cohort" })
     setNotification(`Successfully issued credential ${created.code} to ${created.recipient}!`)
     setTimeout(() => setNotification(null), 4000)
   }
@@ -91,41 +72,61 @@ export default function AdminCertificatesPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
-              <tr>
-                <th className="py-3.5 px-6">Certificate Code</th>
-                <th className="py-3.5 px-6">Recipient</th>
-                <th className="py-3.5 px-6">Course & Batch</th>
-                <th className="py-3.5 px-6">Issue Date</th>
-                <th className="py-3.5 px-6">Status</th>
-                <th className="py-3.5 px-6 text-right">Verification</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#f0f0f2]">
-              {certificates.map((c) => (
-                <tr key={c.id} className="hover:bg-[#fafafc] transition-colors">
-                  <td className="py-4 px-6 font-mono font-bold text-xs text-[#0066cc]">{c.code}</td>
-                  <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{c.recipient}</td>
-                  <td className="py-4 px-6">
-                    <p className="text-[#1d1d1f]">{c.course}</p>
-                    <p className="text-xs text-[#7a7a7a]">{c.batch}</p>
-                  </td>
-                  <td className="py-4 px-6 text-xs text-[#7a7a7a]">{c.issueDate}</td>
-                  <td className="py-4 px-6">
-                    <Badge variant="success">{c.status}</Badge>
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    <Link href={`/verify/cert/${c.code}`} target="_blank">
-                      <Button variant="secondary" size="sm" className="gap-1">
-                        <ExternalLink className="w-3.5 h-3.5" /> Ledger
-                      </Button>
-                    </Link>
-                  </td>
+          {certificates.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#7a7a7a]">
+                <Plus className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-[#1d1d1f]">No Certificates Issued Yet</h3>
+              <p className="text-sm text-[#7a7a7a] mt-1 max-w-sm mx-auto mb-5">
+                Issue cryptographic certificates to learners upon cohort completion or course requirements fulfillment.
+              </p>
+              <Button
+                variant="primary"
+                size="md"
+                className="gap-2 cursor-pointer inline-flex"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Plus className="w-4 h-4" /> Issue Credential
+              </Button>
+            </div>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#fafafc] border-b border-[#e5e5e7] text-[#7a7a7a] text-xs font-medium uppercase tracking-wider">
+                <tr>
+                  <th className="py-3.5 px-6">Certificate Code</th>
+                  <th className="py-3.5 px-6">Recipient</th>
+                  <th className="py-3.5 px-6">Course & Batch</th>
+                  <th className="py-3.5 px-6">Issue Date</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6 text-right">Verification</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#f0f0f2]">
+                {certificates.map((c) => (
+                  <tr key={c.id} className="hover:bg-[#fafafc] transition-colors">
+                    <td className="py-4 px-6 font-mono font-bold text-xs text-[#0066cc]">{c.code}</td>
+                    <td className="py-4 px-6 font-semibold text-[#1d1d1f]">{c.recipient}</td>
+                    <td className="py-4 px-6">
+                      <p className="text-[#1d1d1f]">{c.course}</p>
+                      <p className="text-xs text-[#7a7a7a]">{c.batch}</p>
+                    </td>
+                    <td className="py-4 px-6 text-xs text-[#7a7a7a]">{c.issueDate}</td>
+                    <td className="py-4 px-6">
+                      <Badge variant="success">{c.status}</Badge>
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <Link href={`/verify/cert/${c.code}`} target="_blank">
+                        <Button variant="secondary" size="sm" className="gap-1">
+                          <ExternalLink className="w-3.5 h-3.5" /> Ledger
+                        </Button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </main>
 
