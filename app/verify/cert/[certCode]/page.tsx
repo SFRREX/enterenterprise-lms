@@ -1,8 +1,7 @@
 import Link from "next/link"
-import { ShieldCheck, Award, ArrowLeft, Calendar, UserCheck } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { ShieldCheck, ArrowLeft } from "lucide-react"
+import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 
 interface VerifyPageProps {
   params: Promise<{ certCode: string }>

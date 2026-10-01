@@ -3,10 +3,8 @@
 import { useState, Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Lock, Mail, GraduationCap, ShieldCheck, ArrowRight } from "lucide-react"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { DEMO_ACCOUNTS, AUTH_COOKIE_NAME } from "@/lib/auth"
+import { Lock, Mail, GraduationCap, ShieldCheck } from "lucide-react"
+import { AUTH_COOKIE_NAME } from "@/lib/auth"
 
 import { createClient } from "@/utils/supabase/client"
 
@@ -94,8 +92,9 @@ function LoginForm() {
       } else {
         router.push("/admin/dashboard")
       }
-    } catch (err: any) {
-      setError(err?.message || "An unexpected authentication error occurred.")
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unexpected authentication error occurred."
+      setError(message)
     } finally {
       setIsLoading(false)
     }

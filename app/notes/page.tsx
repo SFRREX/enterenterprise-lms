@@ -1,5 +1,4 @@
-import Link from "next/link"
-import { FileText, Download, BookOpen, Search } from "lucide-react"
+import { Download } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

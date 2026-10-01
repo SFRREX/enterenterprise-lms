@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Award, Download, CheckCircle, ExternalLink } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 

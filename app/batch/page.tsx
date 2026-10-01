@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { Users, Calendar, BookOpen, Award, CheckCircle2 } from "lucide-react"
+import { Users } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 

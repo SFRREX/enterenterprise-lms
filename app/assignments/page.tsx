@@ -1,10 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { CheckSquare, Clock, Upload, FileText, CheckCircle2 } from "lucide-react"
+import { Clock, Upload, FileText, CheckCircle2 } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Clock, AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react"
+import { Clock, ArrowLeft, CheckCircle2 } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

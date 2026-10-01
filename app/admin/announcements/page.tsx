@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { AdminSidebar } from "@/components/layout/admin-sidebar"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
-import { Plus, Bell, Send, Pin, CheckCircle2 } from "lucide-react"
+import { Plus, CheckCircle2 } from "lucide-react"
 
 export default function AdminAnnouncementsPage() {
   const [announcements, setAnnouncements] = useState([

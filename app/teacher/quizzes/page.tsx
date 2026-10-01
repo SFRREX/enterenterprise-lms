@@ -3,7 +3,7 @@ import { TeacherSidebar } from "@/components/layout/teacher-sidebar"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { HelpCircle, Plus, Edit, Eye } from "lucide-react"
+import { Plus, Edit, Eye } from "lucide-react"
 
 export default function TeacherQuizzesPage() {
   const quizzes = [

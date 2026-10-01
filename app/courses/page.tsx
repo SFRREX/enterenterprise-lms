@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { BookOpen, CheckCircle, Clock, FileText, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

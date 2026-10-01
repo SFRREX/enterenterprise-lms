@@ -1,9 +1,7 @@
-import Link from "next/link"
 import { AdminSidebar } from "@/components/layout/admin-sidebar"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShieldCheck, FileSpreadsheet, Download, Activity } from "lucide-react"
+import { Download, Activity } from "lucide-react"
 
 export default function AdminResultsAndAuditsPage() {
   const auditLogs = [

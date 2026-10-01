@@ -1,5 +1,4 @@
-import Link from "next/link"
-import { Bell, Calendar, Pin, AlertCircle } from "lucide-react"
+import { Pin } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"

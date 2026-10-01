@@ -5,28 +5,10 @@ import {
   ShieldCheck, 
   Users, 
   Award, 
-  ChevronRight, 
   GraduationCap,
   Database,
-  Lock,
   Cpu,
-  Layers,
-  ArrowRight,
-  Server,
-  KeyRound,
-  FileCheck,
-  Play,
-  BookOpen,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Zap,
-  Globe2,
-  Terminal,
-  Shield,
-  Sparkles,
-  BarChart3,
-  Video
+  KeyRound
 } from "lucide-react"
 
 export default function HomePage() {

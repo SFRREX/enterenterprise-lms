@@ -1,9 +1,7 @@
 import Link from "next/link"
-import { Award, FileText, CheckCircle2, ChevronRight, Download } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 
 export default function StudentResultsPage() {
   const gpa = "3.92"

@@ -2,8 +2,7 @@ import Link from "next/link"
 import { TeacherSidebar } from "@/components/layout/teacher-sidebar"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { BookOpen, CheckSquare, Clock, Users, ArrowUpRight, HelpCircle } from "lucide-react"
+import { BookOpen, Clock, Users, ArrowUpRight, HelpCircle } from "lucide-react"
 
 export default function TeacherDashboardPage() {
   const stats = [

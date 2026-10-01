@@ -1,9 +1,8 @@
 import Link from "next/link"
-import { PlayCircle, FileText, CheckCircle2, ChevronRight, Download, ArrowLeft } from "lucide-react"
+import { PlayCircle, FileText, CheckCircle2, Download, ArrowLeft } from "lucide-react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 
 export default function LessonViewerPage() {
   const lesson = {

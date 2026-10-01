@@ -1,9 +1,7 @@
-import Link from "next/link"
 import { StudentNavbar } from "@/components/layout/student-navbar"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { User, Mail, Shield, BookOpen, Key } from "lucide-react"
 
 export default function StudentProfilePage() {
   const user = {

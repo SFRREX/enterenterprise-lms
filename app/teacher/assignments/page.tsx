@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { TeacherSidebar } from "@/components/layout/teacher-sidebar"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
-import { CheckSquare, Download, CheckCircle2 } from "lucide-react"
+import { Download, CheckCircle2 } from "lucide-react"
 
 interface Submission {
   id: string

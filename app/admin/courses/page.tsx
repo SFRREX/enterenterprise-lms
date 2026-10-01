@@ -1,13 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { AdminSidebar } from "@/components/layout/admin-sidebar"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
-import { Plus, BookOpen, Layers, Edit, Trash2, CheckCircle2 } from "lucide-react"
+import { Plus, Edit, CheckCircle2 } from "lucide-react"
 
 interface Course {
   id: string

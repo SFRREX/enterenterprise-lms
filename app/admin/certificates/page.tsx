@@ -3,11 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import { AdminSidebar } from "@/components/layout/admin-sidebar"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
-import { Award, Plus, CheckCircle, ExternalLink, CheckCircle2 } from "lucide-react"
+import { Plus, ExternalLink, CheckCircle2 } from "lucide-react"
 
 export default function AdminCertificatesPage() {
   const [certificates, setCertificates] = useState([
