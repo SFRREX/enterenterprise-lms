@@ -82,7 +82,8 @@ R2_PUBLIC_DOMAIN="https://assets.yourdomain.com"
 
 Run the SQL migration scripts in your PostgreSQL or Supabase SQL Editor:
 1. [`database/migrations/001_initial_schema.sql`](file:///database/migrations/001_initial_schema.sql) — Generates core tables (users, courses, chapters, lessons, submissions, certificates).
-2. [`database/migrations/002_row_level_security.sql`](file:///database/migrations/002_row_level_security.sql) — Applies role-based access rules and data isolation policies.
+2. [`database/migrations/002_row_level_security.sql`](file:///database/migrations/002_row_level_security.sql) — Applies foundational role-based access rules.
+3. [`database/migrations/003_production_security_hardening.sql`](file:///database/migrations/003_production_security_hardening.sql) — Applies production zero-trust hardening, privilege escalation protection triggers, pinned search_path, and Storage RLS.
 
 ### 4. Run the Development Server
 

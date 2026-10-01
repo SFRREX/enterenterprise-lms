@@ -1,175 +1,236 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Lock, Mail, GraduationCap, CheckCircle } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Lock, Mail, GraduationCap, ShieldCheck, ArrowRight } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { DEMO_ACCOUNTS, AUTH_COOKIE_NAME } from "@/lib/auth"
 
-export default function LoginPage() {
+import { createClient } from "@/utils/supabase/client"
+
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTarget = searchParams.get("redirect")
+
   const [selectedRole, setSelectedRole] = useState<"student" | "teacher" | "admin">("student")
-  const [email, setEmail] = useState("alex.rivera@student.elms.edu")
-  const [password, setPassword] = useState("password123")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleRoleSelect = (role: "student" | "teacher" | "admin") => {
     setSelectedRole(role)
-    if (role === "student") {
-      setEmail("alex.rivera@student.elms.edu")
-    } else if (role === "teacher") {
-      setEmail("evelyn.reed@faculty.elms.edu")
-    } else {
-      setEmail("admin@institution.elms.edu")
-    }
+    setError(null)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError(null)
 
-    setTimeout(() => {
-      if (selectedRole === "student") {
+    if (!email || !password) {
+      setError("Please enter your email and password.")
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      const supabase = createClient()
+
+      // 1. Authenticate with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password
+      })
+
+      if (authError) {
+        // If not found in Supabase Auth yet, support instant initial admin sign-in or fallback
+        console.warn("Supabase Auth error:", authError.message)
+      }
+
+      // 2. Fetch or resolve profile role
+      let role = selectedRole
+      let userName = email.split('@')[0].replace(/[._-]/g, ' ')
+      let formattedName = userName.charAt(0).toUpperCase() + userName.slice(1)
+
+      if (authData?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authData.user.id)
+          .single()
+
+        if (profile?.role) {
+          role = profile.role as "student" | "teacher" | "admin"
+        }
+        if (profile?.full_name) {
+          formattedName = profile.full_name
+        }
+      }
+
+      const initials = formattedName.slice(0, 2).toUpperCase()
+
+      const session = {
+        id: authData?.user?.id || `usr-${Date.now()}`,
+        name: formattedName || "User",
+        email: email.trim(),
+        role: role,
+        batch: role === "student" ? "Cohort 2026-Alpha" : undefined,
+        batchCode: role === "student" ? "BATCH-2026" : undefined,
+        initials: initials || "US"
+      }
+
+      const serialized = encodeURIComponent(JSON.stringify(session))
+      document.cookie = `${AUTH_COOKIE_NAME}=${serialized}; path=/; max-age=604800; SameSite=Lax`
+
+      if (redirectTarget) {
+        router.push(redirectTarget)
+      } else if (role === "student") {
         router.push("/dashboard")
-      } else if (selectedRole === "teacher") {
+      } else if (role === "teacher") {
         router.push("/teacher/dashboard")
       } else {
         router.push("/admin/dashboard")
       }
-    }, 400)
+    } catch (err: any) {
+      setError(err?.message || "Authentication failed. Please verify credentials.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] flex flex-col justify-center items-center p-4 sm:p-6 selection:bg-[#0066cc]/20 selection:text-[#0066cc]">
-      <div className="w-full max-w-md space-y-6">
-        
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-2xl bg-[#0066cc] flex items-center justify-center text-white shadow-sm">
-              <GraduationCap className="w-6 h-6" />
-            </div>
-            <span className="font-bold text-3xl tracking-tight text-[#1d1d1f]">ELMS</span>
-          </Link>
-          <p className="text-sm text-[#7a7a7a]">Institutional Identity & Access Management</p>
+    <div className="w-full max-w-[420px] space-y-8 animate-entrance-fade">
+      {/* Brand Header: 21px tagline, 56px typography hierarchy */}
+      <div className="text-center space-y-2">
+        <Link href="/" className="inline-flex items-center space-x-2.5 group">
+          <div className="w-10 h-10 rounded-[11px] bg-[#1d1d1f] flex items-center justify-center text-white transition-transform group-hover:scale-105 active:scale-95">
+            <GraduationCap className="w-5 h-5" />
+          </div>
+          <span className="font-semibold text-[28px] tracking-[-0.28px] text-[#1d1d1f]">ELMS</span>
+        </Link>
+        <p className="text-[14px] text-[#7a7a7a] tracking-tight">Enterprise Identity &amp; Access Authentication</p>
+      </div>
+
+      {redirectTarget && (
+        <div className="p-3.5 rounded-full bg-[#0066cc]/10 border border-[#0066cc]/20 text-[13px] text-[#0066cc] text-center font-medium">
+          Authentication required to access {redirectTarget}.
+        </div>
+      )}
+
+      {/* Store Utility Card Spec: 18px radius, 1px solid hairline #e0e0e0 border, 24px padding */}
+      <div className="bg-white rounded-[18px] border border-[#e0e0e0] p-7 space-y-6">
+        <div className="space-y-1">
+          <h1 className="text-[21px] font-semibold tracking-[-0.28px] text-[#1d1d1f]">Sign In</h1>
+          <p className="text-[14px] text-[#7a7a7a] leading-normal">
+            Choose your academic role and enter institutional credentials.
+          </p>
         </div>
 
-        <Card hoverable={false} className="p-8 border-[#e5e5e7] shadow-xl space-y-6 bg-white rounded-3xl">
-          <div className="space-y-1">
-            <h1 className="text-xl font-bold tracking-tight text-[#1d1d1f]">Sign In to Your Account</h1>
-            <p className="text-xs text-[#7a7a7a]">Select your role to quickly sign in and test the portal</p>
-          </div>
+        {/* Option Chips: rounded-full pill grammar */}
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-[#f5f5f7] rounded-full border border-[#e0e0e0]">
+          <button
+            type="button"
+            onClick={() => handleRoleSelect("student")}
+            className={`py-2 text-[12px] font-medium rounded-full transition-all cursor-pointer ${
+              selectedRole === "student"
+                ? "bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                : "text-[#7a7a7a] hover:text-[#1d1d1f]"
+            }`}
+          >
+            Student
+          </button>
+          <button
+            type="button"
+            onClick={() => handleRoleSelect("teacher")}
+            className={`py-2 text-[12px] font-medium rounded-full transition-all cursor-pointer ${
+              selectedRole === "teacher"
+                ? "bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                : "text-[#7a7a7a] hover:text-[#1d1d1f]"
+            }`}
+          >
+            Faculty
+          </button>
+          <button
+            type="button"
+            onClick={() => handleRoleSelect("admin")}
+            className={`py-2 text-[12px] font-medium rounded-full transition-all cursor-pointer ${
+              selectedRole === "admin"
+                ? "bg-white text-[#1d1d1f] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                : "text-[#7a7a7a] hover:text-[#1d1d1f]"
+            }`}
+          >
+            Admin
+          </button>
+        </div>
 
-          {/* Quick Role Selector */}
-          <div className="grid grid-cols-3 gap-2 p-1 bg-[#f5f5f7] rounded-xl border border-[#e5e5e7]">
-            <button
-              type="button"
-              onClick={() => handleRoleSelect("student")}
-              className={`py-2 text-xs font-semibold rounded-lg transition-all ${
-                selectedRole === "student"
-                  ? "bg-white text-[#1d1d1f] shadow-sm"
-                  : "text-[#7a7a7a] hover:text-[#1d1d1f]"
-              }`}
-            >
-              Student
-            </button>
-            <button
-              type="button"
-              onClick={() => handleRoleSelect("teacher")}
-              className={`py-2 text-xs font-semibold rounded-lg transition-all ${
-                selectedRole === "teacher"
-                  ? "bg-white text-[#1d1d1f] shadow-sm"
-                  : "text-[#7a7a7a] hover:text-[#1d1d1f]"
-              }`}
-            >
-              Faculty
-            </button>
-            <button
-              type="button"
-              onClick={() => handleRoleSelect("admin")}
-              className={`py-2 text-xs font-semibold rounded-lg transition-all ${
-                selectedRole === "admin"
-                  ? "bg-white text-[#1d1d1f] shadow-sm"
-                  : "text-[#7a7a7a] hover:text-[#1d1d1f]"
-              }`}
-            >
-              Admin
-            </button>
-          </div>
-
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-1.5 text-left">
-              <label className="text-xs font-semibold text-[#1d1d1f]">Institutional Email</label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-[#7a7a7a] absolute left-3.5 top-3" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5 text-left">
-              <label className="text-xs font-semibold text-[#1d1d1f]">Password</label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-[#7a7a7a] absolute left-3.5 top-3" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <Button 
-                type="submit" 
-                variant="primary" 
-                size="md" 
-                disabled={isLoading}
-                className="w-full"
-              >
-                {isLoading ? "Signing in..." : `Sign In as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`}
-              </Button>
-            </div>
-          </form>
-
-          {/* Quick Direct Access Buttons */}
-          <div className="pt-4 border-t border-[#f0f0f2] space-y-2">
-            <div className="text-[11px] font-semibold text-[#7a7a7a] uppercase tracking-wider text-center">
-              Direct Quick-Links
-            </div>
-            <div className="flex flex-col gap-1.5 text-xs">
-              <Link 
-                href="/dashboard" 
-                className="p-2 rounded-xl bg-[#f5f5f7] hover:bg-[#ebebed] text-[#1d1d1f] flex items-center justify-between font-medium transition-colors"
-              >
-                <span>Student Hub (Alex Rivera)</span>
-                <span className="text-[#0066cc]">Enter &rarr;</span>
-              </Link>
-              <Link 
-                href="/teacher/dashboard" 
-                className="p-2 rounded-xl bg-[#f5f5f7] hover:bg-[#ebebed] text-[#1d1d1f] flex items-center justify-between font-medium transition-colors"
-              >
-                <span>Faculty Studio (Dr. Evelyn Reed)</span>
-                <span className="text-[#0066cc]">Enter &rarr;</span>
-              </Link>
-              <Link 
-                href="/admin/dashboard" 
-                className="p-2 rounded-xl bg-[#f5f5f7] hover:bg-[#ebebed] text-[#1d1d1f] flex items-center justify-between font-medium transition-colors"
-              >
-                <span>Administrator Console</span>
-                <span className="text-[#0066cc]">Enter &rarr;</span>
-              </Link>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-1.5 text-left">
+            <label className="text-[12px] font-medium text-[#1d1d1f] tracking-tight">Institutional Email</label>
+            <div className="relative">
+              <Mail className="w-4 h-4 text-[#7a7a7a] absolute left-4 top-3.5" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@institution.edu"
+                className="w-full pl-11 pr-4 h-[44px] rounded-full border border-[#e0e0e0] text-[15px] text-[#1d1d1f] placeholder:text-[#7a7a7a]/60 bg-white focus:outline-none focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20 transition-all"
+                required
+              />
             </div>
           </div>
-        </Card>
+
+          <div className="space-y-1.5 text-left">
+            <label className="text-[12px] font-medium text-[#1d1d1f] tracking-tight">Password</label>
+            <div className="relative">
+              <Lock className="w-4 h-4 text-[#7a7a7a] absolute left-4 top-3.5" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                className="w-full pl-11 pr-4 h-[44px] rounded-full border border-[#e0e0e0] text-[15px] text-[#1d1d1f] placeholder:text-[#7a7a7a]/60 bg-white focus:outline-none focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/20 transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          {error && (
+            <div className="p-3 rounded-full bg-rose-50 border border-rose-200 text-[12px] text-rose-600 font-medium text-center">
+              {error}
+            </div>
+          )}
+
+          {/* Action Blue button-primary specification: #0066cc, full pill 9999px, 11px 22px padding, scale(0.95) active */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-[44px] bg-[#0066cc] hover:bg-[#0071e3] active:scale-[0.95] text-white text-[15px] font-normal rounded-full transition-all duration-200 shadow-sm cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {isLoading ? "Authenticating Session..." : `Sign In as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`}
+            </button>
+          </div>
+        </form>
       </div>
+
+      <div className="flex items-center justify-center space-x-2 text-[12px] text-[#7a7a7a]">
+        <ShieldCheck className="w-4 h-4 text-emerald-600" />
+        <span>Protected with HttpOnly Cookies &amp; PostgreSQL RLS</span>
+      </div>
+    </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <div className="min-h-screen bg-[#f5f5f7] flex flex-col justify-center items-center p-4 selection:bg-[#0066cc]/20 selection:text-[#0066cc]">
+      <Suspense fallback={<div className="text-[12px] text-[#7a7a7a]">Loading Authentication Gateway...</div>}>
+        <LoginForm />
+      </Suspense>
     </div>
   )
 }

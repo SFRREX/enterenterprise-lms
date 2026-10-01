@@ -84,16 +84,16 @@ export default function StudentDashboardPage() {
           </div>
         </div>
 
-        {/* Resumption Card (High priority LMS UX Pattern) */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1d1d1f] to-[#272729] text-white p-8 sm:p-10 shadow-xl">
+        {/* Resumption Card (High priority LMS UX Pattern: dark tile 1 with single product shadow) */}
+        <div className="relative overflow-hidden rounded-[18px] bg-[#272729] text-white p-8 sm:p-10 border border-white/10 card-elevation-lg">
           <div className="relative z-10 max-w-2xl space-y-4">
-            <Badge variant="default" className="bg-[#0066cc] text-white">
+            <span className="inline-block text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-[#0066cc] text-white">
               Pick up where you left off
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+            </span>
+            <h2 className="text-[28px] sm:text-[34px] font-semibold tracking-[-0.374px] leading-tight">
               {activeCourses[0].nextLesson.title}
             </h2>
-            <p className="text-sm text-[#cccccc]">
+            <p className="text-[17px] text-[#cccccc] leading-relaxed">
               {activeCourses[0].title} &bull; {activeCourses[0].nextLesson.chapter}
             </p>
             <div className="pt-2 flex flex-wrap items-center gap-4">
