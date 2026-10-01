@@ -52,30 +52,26 @@ function LoginForm() {
       }
 
       // 2. Fetch authenticated profile role
-      const { data: profile, error: profileError } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', authData.user.id)
-        .single()
+        .maybeSingle()
 
-      if (profileError || !profile) {
-        setError("Account authenticated, but no active profile was found. Please contact administration.")
-        setIsLoading(false)
-        return
-      }
-
-      const role = profile.role as "student" | "teacher" | "admin"
-      const formattedName = profile.full_name || email.split('@')[0]
+      // Extract verified role from profile, or fallback to auth metadata
+      const metaRole = (authData.user.app_metadata?.role || authData.user.user_metadata?.role) as string | undefined
+      const resolvedRole = (profile?.role || metaRole || selectedRole) as "student" | "teacher" | "admin"
+      const formattedName = profile?.full_name || authData.user.user_metadata?.full_name || email.split('@')[0]
       const initials = formattedName.slice(0, 2).toUpperCase()
 
       // 3. Set verified session cookie
       const session = {
         id: authData.user.id,
         name: formattedName,
-        email: profile.email || email.trim(),
-        role: role,
-        batch: role === "student" ? "Cohort 2026-Alpha" : undefined,
-        batchCode: role === "student" ? "BATCH-2026" : undefined,
+        email: profile?.email || email.trim(),
+        role: resolvedRole,
+        batch: resolvedRole === "student" ? "Cohort 2026-Alpha" : undefined,
+        batchCode: resolvedRole === "student" ? "BATCH-2026" : undefined,
         initials: initials
       }
 
@@ -85,9 +81,9 @@ function LoginForm() {
       // 4. Role-based redirect
       if (redirectTarget) {
         router.push(redirectTarget)
-      } else if (role === "student") {
+      } else if (resolvedRole === "student") {
         router.push("/dashboard")
-      } else if (role === "teacher") {
+      } else if (resolvedRole === "teacher") {
         router.push("/teacher/dashboard")
       } else {
         router.push("/admin/dashboard")
