@@ -22,6 +22,7 @@ export function AdminSidebar() {
     { label: "Dashboard", href: "/admin/dashboard", icon: ShieldCheck },
     { label: "Batches", href: "/admin/batches", icon: FolderGit2 },
     { label: "Courses", href: "/admin/courses", icon: BookOpen },
+    { label: "Lectures & Lessons", href: "/admin/lectures", icon: BookOpen },
     { label: "Students", href: "/admin/students", icon: Users },
     { label: "Teachers", href: "/admin/teachers", icon: Users },
     { label: "Assignments", href: "/admin/assignments", icon: BookOpen },
@@ -68,6 +69,22 @@ export function AdminSidebar() {
       </div>
 
       <div className="pt-4 border-t border-[#f0f0f2] mt-4">
+        <div className="space-y-1 mb-2">
+          <p className="px-3 text-[10px] font-semibold text-[#7a7a7a] uppercase tracking-wider">Universal Access</p>
+          <Link
+            href="/teacher/dashboard"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs text-[#0066cc] hover:bg-[#0066cc]/10 rounded-lg transition-colors"
+          >
+            <span>&rarr; Switch to Faculty Portal</span>
+          </Link>
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs text-[#0066cc] hover:bg-[#0066cc]/10 rounded-lg transition-colors"
+          >
+            <span>&rarr; Switch to Student Portal</span>
+          </Link>
+        </div>
+
         <button
           onClick={async () => {
             try {

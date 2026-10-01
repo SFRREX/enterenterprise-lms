@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { AdminSidebar } from "@/components/layout/admin-sidebar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -111,6 +112,11 @@ export default function AdminCoursesPage() {
                       </Badge>
                     </td>
                     <td className="py-4 px-6 text-right space-x-2">
+                      <Link href="/admin/lectures">
+                        <Button variant="secondary" size="sm" className="mr-1">
+                          + Add Lecture
+                        </Button>
+                      </Link>
                       <Button
                         variant="secondary"
                         size="sm"

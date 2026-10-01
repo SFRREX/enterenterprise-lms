@@ -181,6 +181,14 @@ export function StudentNavbar() {
         </div>
 
         <div className="hidden sm:flex items-center space-x-3">
+          {currentUser.role === "admin" && (
+            <Link
+              href="/admin/dashboard"
+              className="px-3 py-1 rounded-full text-xs font-semibold bg-[#1d1d1f] text-white hover:bg-black transition-colors"
+            >
+              Admin Console &rarr;
+            </Link>
+          )}
           <Link
             href="/profile"
             className="flex items-center space-x-2.5 px-2.5 py-1.5 rounded-full hover:bg-[#f5f5f7] transition-colors border border-transparent hover:border-[#e5e5e7]"

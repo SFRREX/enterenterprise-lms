@@ -52,6 +52,12 @@ export function TeacherSidebar() {
       </div>
 
       <div className="pt-4 border-t border-[#f0f0f2]">
+        <Link
+          href="/admin/dashboard"
+          className="flex items-center gap-2 px-3 py-1.5 mb-2 text-xs text-[#0066cc] hover:bg-[#0066cc]/10 rounded-lg transition-colors font-medium"
+        >
+          <span>&larr; Return to Admin Portal</span>
+        </Link>
         <button
           onClick={async () => {
             try {
