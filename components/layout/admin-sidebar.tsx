@@ -69,8 +69,15 @@ export function AdminSidebar() {
 
       <div className="pt-4 border-t border-[#f0f0f2] mt-4">
         <button
-          onClick={() => {
-            document.cookie = "elms_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+          onClick={async () => {
+            try {
+              const { createClient } = await import("@/utils/supabase/client")
+              const supabase = createClient()
+              await supabase.auth.signOut()
+            } catch {
+              // ignore
+            }
+            document.cookie = "elms_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
             router.push("/login")
           }}
           className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl text-rose-600 hover:bg-rose-50 transition-all cursor-pointer text-left"

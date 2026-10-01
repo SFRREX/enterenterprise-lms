@@ -61,9 +61,16 @@ export function StudentNavbar() {
     return () => clearTimeout(timer)
   }, [])
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    try {
+      const { createClient } = await import("@/utils/supabase/client")
+      const supabase = createClient()
+      await supabase.auth.signOut()
+    } catch {
+      // ignore
+    }
     // Delete auth session cookie
-    document.cookie = "elms_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+    document.cookie = "elms_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
     router.push("/login")
   }
 

@@ -198,8 +198,13 @@ function LoginForm() {
           </div>
 
           {error && (
-            <div className="p-3 rounded-full bg-rose-50 border border-rose-200 text-[12px] text-rose-600 font-medium text-center">
-              {error}
+            <div 
+              role="alert" 
+              aria-live="assertive"
+              className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-[13px] text-rose-700 font-medium text-center flex items-center justify-center gap-2"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-600 inline-block animate-pulse" />
+              <span>{error}</span>
             </div>
           )}
 

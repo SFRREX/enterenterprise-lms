@@ -34,7 +34,13 @@ export function proxy(request: NextRequest) {
   // If already authenticated and visiting /login, redirect to their role home
   if (pathname === '/login' && sessionCookie?.value) {
     try {
-      const session = JSON.parse(sessionCookie.value)
+      let rawVal = sessionCookie.value
+      try {
+        rawVal = decodeURIComponent(rawVal)
+      } catch {
+        // use rawVal
+      }
+      const session = JSON.parse(rawVal)
       if (session.role === 'admin') {
         return NextResponse.redirect(new URL('/admin/dashboard', request.url))
       } else if (session.role === 'teacher') {
