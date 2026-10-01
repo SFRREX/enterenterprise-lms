@@ -1,18 +1,43 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { StudentNavbar } from "@/components/layout/student-navbar"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 export default function StudentProfilePage() {
-  const user = {
-    name: "Alex Rivera",
-    email: "alex.rivera@student.elms.edu",
+  const [user, setUser] = useState({
+    name: "Student Account",
+    email: "student@elms.edu",
     role: "student",
-    batch: "Cohort 2026-Alpha",
-    batchCode: "BATCH-26A",
-    studentId: "STD-2026-089",
-    joinedDate: "January 15, 2026"
-  }
+    batch: "Active Cohort",
+    batchCode: "BATCH-2026",
+    studentId: "STD-2026",
+    joinedDate: "Academic Year 2026"
+  })
+
+  useEffect(() => {
+    try {
+      const match = document.cookie.match(new RegExp('(^| )elms_session=([^;]+)'))
+      if (match && match[2]) {
+        const decoded = JSON.parse(decodeURIComponent(match[2]))
+        if (decoded) {
+          setUser(prev => ({
+            ...prev,
+            name: decoded.name || prev.name,
+            email: decoded.email || prev.email,
+            role: decoded.role || prev.role,
+            batch: decoded.batch || prev.batch,
+            batchCode: decoded.batchCode || prev.batchCode,
+            studentId: decoded.id ? `STD-${decoded.id.slice(0, 8).toUpperCase()}` : prev.studentId
+          }))
+        }
+      }
+    } catch {
+      // fallback to state
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-[#f5f5f7]">

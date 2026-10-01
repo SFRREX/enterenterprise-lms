@@ -142,16 +142,14 @@ export default function AdminAnnouncementsPage() {
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#1d1d1f]">Target Audience</label>
-            <select
+            <input
+              type="text"
+              required
               value={newAnn.target}
               onChange={(e) => setNewAnn({ ...newAnn, target: e.target.value })}
+              placeholder="e.g. All Active Cohorts, or Cohort 2026-Alpha"
               className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-            >
-              <option value="All Active Cohorts">All Active Cohorts</option>
-              <option value="Cohort 2026-Alpha">Cohort 2026-Alpha only</option>
-              <option value="Cohort 2026-Beta">Cohort 2026-Beta only</option>
-              <option value="Faculty & Teachers Only">Faculty & Teachers Only</option>
-            </select>
+            />
           </div>
 
           <div className="flex items-center gap-2 pt-1">

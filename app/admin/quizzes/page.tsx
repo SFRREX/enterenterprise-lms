@@ -142,15 +142,14 @@ export default function AdminQuizzesPage() {
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#1d1d1f]">Course Program</label>
-            <select
+            <input
+              type="text"
+              required
               value={newQuiz.course}
               onChange={(e) => setNewQuiz({ ...newQuiz, course: e.target.value })}
+              placeholder="e.g. Distributed Database Engineering"
               className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-            >
-              <option value="Advanced Full-Stack Engineering with Next.js & PostgreSQL">Advanced Full-Stack Engineering</option>
-              <option value="Cloud Infrastructure, Distributed Systems & Edge R2">Cloud Infrastructure & Edge</option>
-              <option value="Secure Authentication, Cryptography & JWT Systems">Secure Authentication Systems</option>
-            </select>
+            />
           </div>
 
           <div className="space-y-1">

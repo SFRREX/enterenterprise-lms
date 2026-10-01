@@ -207,22 +207,15 @@ export default function AdminTeachersPage() {
         title={`Assign Courses to ${selectedTeacher}`}
       >
         <div className="space-y-4">
-          <p className="text-xs text-[#7a7a7a]">
-            Select courses from active cohorts to assign to this faculty member:
-          </p>
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 p-3 rounded-xl border border-[#e5e5e7] hover:bg-[#fafafc] cursor-pointer text-xs">
-              <input type="checkbox" defaultChecked className="rounded text-[#0066cc]" />
-              <span>Advanced Full-Stack Engineering (Cohort 2026-Alpha)</span>
-            </label>
-            <label className="flex items-center gap-2 p-3 rounded-xl border border-[#e5e5e7] hover:bg-[#fafafc] cursor-pointer text-xs">
-              <input type="checkbox" className="rounded text-[#0066cc]" />
-              <span>Distributed Systems Architecture (Cohort 2026-Beta)</span>
-            </label>
-            <label className="flex items-center gap-2 p-3 rounded-xl border border-[#e5e5e7] hover:bg-[#fafafc] cursor-pointer text-xs">
-              <input type="checkbox" className="rounded text-[#0066cc]" />
-              <span>Cryptographic Security Systems (Unassigned)</span>
-            </label>
+          <div className="space-y-3">
+            <p className="text-xs text-[#7a7a7a]">
+              Specify courses to assign to this faculty member (comma separated or enter course title):
+            </p>
+            <input
+              type="text"
+              placeholder="e.g. Distributed Database Engineering, Cloud Systems"
+              className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
+            />
           </div>
           <div className="pt-4 flex justify-end gap-2 border-t border-[#f0f0f2]">
             <Button

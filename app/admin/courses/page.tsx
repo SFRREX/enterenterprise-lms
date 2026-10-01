@@ -48,7 +48,7 @@ export default function AdminCoursesPage() {
 
     setCourses([created, ...courses])
     setIsModalOpen(false)
-    setNewCourse({ title: "", batch: "Cohort 2026-Alpha", instructor: "Dr. Evelyn Reed", isPublished: true })
+    setNewCourse({ title: "", batch: "", instructor: "", isPublished: true })
     setNotification(`Successfully created course "${created.title}"!`)
     setTimeout(() => setNotification(null), 4000)
   }
@@ -171,28 +171,26 @@ export default function AdminCoursesPage() {
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#1d1d1f]">Assign to Cohort</label>
-            <select
+            <input
+              type="text"
+              required
               value={newCourse.batch}
               onChange={(e) => setNewCourse({ ...newCourse, batch: e.target.value })}
+              placeholder="e.g. Cohort 2026-Alpha"
               className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-            >
-              <option value="Cohort 2026-Alpha">Cohort 2026-Alpha</option>
-              <option value="Cohort 2026-Beta">Cohort 2026-Beta</option>
-              <option value="AI Systems Engineering 2026">AI Systems Engineering 2026</option>
-            </select>
+            />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#1d1d1f]">Lead Faculty Instructor</label>
-            <select
+            <input
+              type="text"
+              required
               value={newCourse.instructor}
               onChange={(e) => setNewCourse({ ...newCourse, instructor: e.target.value })}
+              placeholder="e.g. Dr. Robert Chen"
               className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-            >
-              <option value="Dr. Evelyn Reed">Dr. Evelyn Reed</option>
-              <option value="Marcus Vance">Marcus Vance</option>
-              <option value="Sarah Jenkins">Sarah Jenkins</option>
-            </select>
+            />
           </div>
 
           <div className="pt-4 flex justify-end gap-2 border-t border-[#f0f0f2]">

@@ -173,15 +173,14 @@ export default function AdminStudentsPage() {
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#1d1d1f]">Assign to Cohort</label>
-            <select
+            <input
+              type="text"
+              required
               value={newStudent.batch}
               onChange={(e) => setNewStudent({ ...newStudent, batch: e.target.value })}
+              placeholder="e.g. Cohort 2026-Alpha"
               className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-            >
-              <option value="Cohort 2026-Alpha">Cohort 2026-Alpha (Full-Stack Engineering)</option>
-              <option value="Cohort 2026-Beta">Cohort 2026-Beta (Cloud Systems)</option>
-              <option value="AI Systems Engineering 2026">AI Systems Engineering 2026</option>
-            </select>
+            />
           </div>
 
           <div className="pt-4 flex justify-end gap-2 border-t border-[#f0f0f2]">

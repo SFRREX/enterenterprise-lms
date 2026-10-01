@@ -151,15 +151,14 @@ export default function AdminCertificatesPage() {
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#1d1d1f]">Course Program</label>
-            <select
+            <input
+              type="text"
+              required
               value={newCert.course}
               onChange={(e) => setNewCert({ ...newCert, course: e.target.value })}
+              placeholder="e.g. Advanced Full-Stack Engineering & Cloud Systems"
               className="w-full px-3.5 py-2 rounded-xl border border-[#e5e5e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30"
-            >
-              <option value="Advanced Full-Stack Engineering with Next.js & PostgreSQL">Advanced Full-Stack Engineering with Next.js & PostgreSQL</option>
-              <option value="Cloud Infrastructure, Distributed Systems & Edge R2">Cloud Infrastructure, Distributed Systems & Edge R2</option>
-              <option value="Secure Authentication, Cryptography & JWT Systems">Secure Authentication, Cryptography & JWT Systems</option>
-            </select>
+            />
           </div>
 
           <div className="pt-4 flex justify-end gap-2 border-t border-[#f0f0f2]">

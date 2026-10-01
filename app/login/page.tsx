@@ -70,8 +70,8 @@ function LoginForm() {
         name: formattedName,
         email: profile?.email || email.trim(),
         role: resolvedRole,
-        batch: resolvedRole === "student" ? "Cohort 2026-Alpha" : undefined,
-        batchCode: resolvedRole === "student" ? "BATCH-2026" : undefined,
+        batch: resolvedRole === "student" ? (profile?.batch || "General Cohort") : undefined,
+        batchCode: resolvedRole === "student" ? (profile?.batch_code || "COHORT-STD") : undefined,
         initials: initials
       }
 
